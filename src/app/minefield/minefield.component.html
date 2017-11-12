@@ -1,0 +1,11 @@
+<table>
+  <tr *ngFor="let mRow of minefield; let r = index">
+    <td style="border: 1px solid black;" *ngFor="let square of mRow; let c = index">
+      <div class="minefield-square" (click)="squareClicked(r, c)">
+        <div *ngIf="minefield[r][c].revealed">
+          {{ minefield[r][c].isMine ? 'X' : minefield[r][c].neighboringMines }}
+        </div>
+      </div>
+    </td>
+  </tr>
+</table>
