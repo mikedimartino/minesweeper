@@ -34,27 +34,24 @@ export class GameContainerComponent implements OnInit {
 
   ngOnInit() {
     this.difficulty = GameDifficulty.Beginner;
+    this.newGame();
   }
 
   newGame() {
-    // this.minefield.buildMinefield(10, 10, 5);
-    let settings: GameSettings;
-    switch(this.difficulty) {
-      case GameDifficulty.Beginner:
-        settings = new GameSettings(this.beginnerHeight, this.beginnerWidth, this.beginnerMines);
-        break;
-      case GameDifficulty.Intermediate:
-        settings =  new GameSettings(this.intermediateHeight, this.intermediateWidth, this.intermediateMines);
-        break;
-      case GameDifficulty.Expert:
-        settings =  new GameSettings(this.expertHeight, this.expertWidth, this.expertMines);
-        break;
-      case GameDifficulty.Custom:
-        settings =  new GameSettings(this.customHeight, this.customWidth, this.customMines);
-        break;
-    }
-    this.minefield.buildMinefield(settings.height, settings.width, settings.mines);
+    this.minefield.buildMinefield(this.getSettings(this.difficulty));
   }
 
+  getSettings(difficulty: GameDifficulty): GameSettings {
+    switch(difficulty) {
+      case GameDifficulty.Beginner:
+        return new GameSettings(this.beginnerHeight, this.beginnerWidth, this.beginnerMines);
+      case GameDifficulty.Intermediate:
+        return  new GameSettings(this.intermediateHeight, this.intermediateWidth, this.intermediateMines);
+      case GameDifficulty.Expert:
+        return  new GameSettings(this.expertHeight, this.expertWidth, this.expertMines);
+      case GameDifficulty.Custom:
+        return  new GameSettings(this.customHeight, this.customWidth, this.customMines);
+    }
+  }
 
 }

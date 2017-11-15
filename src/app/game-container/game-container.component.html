@@ -1,7 +1,8 @@
 <div class="game-container-wrapper">
   
-  <button (click)="op.toggle($event)">Game</button>
-  <p-overlayPanel #op [dismissable]="false" [showCloseIcon]="true">
+  <button (click)="op.toggle($event)">Settings</button>
+  <button (click)="newGame()">New Game</button>
+  <p-overlayPanel #op [dismissable]="true" [showCloseIcon]="true">
     <table>
       <tr>
         <td></td>
@@ -58,4 +59,12 @@
   </p-overlayPanel>
 
   <minefield></minefield>
+
+  <div class="game-info">
+    <!--<div>Total squares: {{ minefield.totalSquares }}</div>-->
+    <!--<div>Mines: {{ minefield.mineCount }}</div>-->
+    <div>Remaining safe squares: {{ minefield.remainingSafeSquares }}</div>
+  </div>
+  
+
 </div>

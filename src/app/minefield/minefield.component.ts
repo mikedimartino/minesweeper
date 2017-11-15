@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
-import { MinefieldSquare, GameState } from "../custom-types";
+import { MinefieldSquare, GameState, GameSettings } from "../custom-types";
 
 @Component({
   selector: 'minefield',
@@ -12,11 +12,12 @@ export class MinefieldComponent implements OnInit {
   @Input() columns: number;// = 10;
 
   totalSquares: number;
-  mines: number = 10;
+  mineCount: number = 10;
   minefield: MinefieldSquare[][];
   gameState: GameState;
-  revealedCount = 0;
-  squaresToReveal: number;
+  remainingSafeSquares: number;
+
+  private mineSquares: MinefieldSquare[];
 
   constructor() { }
 
@@ -24,17 +25,18 @@ export class MinefieldComponent implements OnInit {
     this.gameState = GameState.InProgress;
   }
 
-  buildMinefield(rows: number, columns: number, mines: number): void {
-    this.rows = rows;
-    this.columns = columns;
-    this.totalSquares = rows * columns;
-    this.mines = mines > this.totalSquares ? this.totalSquares : mines;
-    this.squaresToReveal = this.totalSquares - this.mines;
-
+  buildMinefield(settings: GameSettings): void {
+    this.rows = settings.rows;
+    this.columns = settings.columns;
+    this.totalSquares = settings.rows * settings.columns;
+    this.mineCount = settings.mines > this.totalSquares ? this.totalSquares : settings.mines;
+    this.remainingSafeSquares = this.totalSquares - this.mineCount;
+    this.mineSquares = [];
     this.minefield = [];
-    for (let i = 0; i < rows; i++) {
+
+    for (let i = 0; i < settings.rows; i++) {
       this.minefield[i] = [];
-      for (let j = 0; j < columns; j++) {
+      for (let j = 0; j < settings.columns; j++) {
         this.minefield[i][j] = new MinefieldSquare(i, j);
       }
     }
@@ -42,37 +44,42 @@ export class MinefieldComponent implements OnInit {
     // Fill in mines and set neighboringMines counts
     let r: number;
     let c: number;
-    for (let i = 0; i < mines; i++) {
+    for (let i = 0; i < settings.mines; i++) {
       while (true) {
-        r = this.getRandomNumber(0, rows - 1);
-        c = this.getRandomNumber(0, columns - 1);
+        r = this.getRandomNumber(0, settings.rows - 1);
+        c = this.getRandomNumber(0, settings.columns - 1);
         if (!this.minefield[r][c].isMine) {
           this.setMine(r, c);
+          this.mineSquares.push(this.minefield[r][c]);
           break;
         }
       }
     }
 
     this.gameState = GameState.InProgress;
-    this.revealedCount = 0;
   }
 
-  squareClicked(r: number, c: number) {
+  squareClicked(event: MouseEvent ,r: number, c: number): void {
     if (this.gameState === GameState.Defeat || this.gameState === GameState.Victory) return;
 
     const square = this.minefield[r][c];
     if (square.revealed) return;
 
-    this.revealSquare(square);
-    if (square.isMine) {
-      this.gameState = GameState.Defeat;
-      console.log("BOOM! You lost!")
-    } else if (square.neighboringMines === 0) {
-      this.revealSafeNeighbors(r, c);
+    if (event.which === 1) { // left click
+      this.revealSquare(square);
+      if (square.isMine) {
+        this.gameState = GameState.Defeat;
+        this.revealMines();
+      } else if (square.neighboringMines === 0) {
+        this.revealSafeNeighbors(r, c);
+      }
+    }
+    else if (event.which === 3) { // right click
+      square.flagged = true;
     }
   }
 
-  private revealSafeNeighbors(r: number, c: number) {
+  private revealSafeNeighbors(r: number, c: number): void {
     const _this = this;
     this.getNeighbors(r, c).forEach(function(s) {
       if (s.revealed) return;
@@ -87,12 +94,16 @@ export class MinefieldComponent implements OnInit {
   private revealSquare(square: MinefieldSquare): void {
     if (square.revealed) return; // Why is this needed?
 
-    square.revealed = true;
-    this.revealedCount++;
-    if (this.revealedCount === this.squaresToReveal) {
+    square.reveal();
+    this.remainingSafeSquares--;
+    if (this.remainingSafeSquares === 0) {
       this.gameState = GameState.Victory;
-      console.log("Congratulations! You won!");
+      window.alert("Congratulations! You won!");
     }
+  }
+
+  private revealMines(): void {
+    this.mineSquares.forEach(s => s.reveal());
   }
 
   private getRandomNumber(min: number, max: number): number {
