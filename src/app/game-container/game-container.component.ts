@@ -35,13 +35,13 @@ export class GameContainerComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.settingsForm = new FormGroup({
-      difficulty: new FormControl('difficulty'),
-      customHeight: new FormControl('customHeight'),
-      customWidth: new FormControl('customWidth'),
-      customMines: new FormControl('customMines'),
-    });
     this.difficulty = GameDifficulty.Beginner;
+    this.settingsForm = new FormGroup({
+      difficulty: new FormControl(this.difficulty),
+      customHeight: new FormControl(0),
+      customWidth: new FormControl(0),
+      customMines: new FormControl(0),
+    });
     this.newGame();
   }
 
@@ -55,7 +55,11 @@ export class GameContainerComponent implements OnInit {
     this.minefield.buildMinefield(this.getSettings());
   }
 
-  getSettings(): GameSettings {
+  hideOverlay() {
+    console.log("HIDE");
+  }
+
+  private getSettings(): GameSettings {
     switch(this.difficulty) {
       case GameDifficulty.Beginner:
         return new GameSettings(this.beginnerHeight, this.beginnerWidth, this.beginnerMines);
