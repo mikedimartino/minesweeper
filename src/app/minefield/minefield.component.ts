@@ -16,20 +16,22 @@ export class MinefieldComponent implements OnInit {
   minefield: MinefieldSquare[][];
   gameState: GameState;
   remainingSafeSquares: number;
+  settings: GameSettings;
 
   private mineSquares: MinefieldSquare[];
 
   constructor() { }
 
   ngOnInit() { 
-    this.gameState = GameState.InProgress;
+    this.gameState = GameState.Ready;
   }
 
   buildMinefield(settings: GameSettings): void {
+    this.settings = settings;
     this.rows = settings.rows;
     this.columns = settings.columns;
     this.totalSquares = settings.rows * settings.columns;
-    this.mineCount = settings.mines > this.totalSquares ? this.totalSquares : settings.mines;
+    this.mineCount = settings.mines >= this.totalSquares ? this.totalSquares - 1 : settings.mines;
     this.remainingSafeSquares = this.totalSquares - this.mineCount;
     this.mineSquares = [];
     this.minefield = [];
@@ -56,16 +58,24 @@ export class MinefieldComponent implements OnInit {
       }
     }
 
-    this.gameState = GameState.InProgress;
+    this.gameState = GameState.Ready;
   }
 
   squareClicked(event: MouseEvent ,r: number, c: number): void {
-    if (this.gameState === GameState.Defeat || this.gameState === GameState.Victory) return;
-
-    const square = this.minefield[r][c];
+    let square = this.minefield[r][c];
     if (square.revealed) return;
 
-    if (event.which === 1) { // left click
+    if (event.which === 1) { // Left click
+      if (this.gameState === GameState.Ready) {
+        // Don't allow first click to be on a mine
+        while (square.isMine) {
+          this.buildMinefield(this.settings);
+          square = this.minefield[r][c];
+        }
+        this.gameState = GameState.InProgress;
+      } else if (this.gameState === GameState.Defeat || this.gameState === GameState.Victory) {
+        return;
+      }
       this.revealSquare(square);
       if (square.isMine) {
         this.gameState = GameState.Defeat;
@@ -73,8 +83,7 @@ export class MinefieldComponent implements OnInit {
       } else if (square.neighboringMines === 0) {
         this.revealSafeNeighbors(r, c);
       }
-    }
-    else if (event.which === 3) { // right click
+    } else if (event.which === 3) { // Right click
       square.flagged = true;
     }
   }
@@ -98,12 +107,16 @@ export class MinefieldComponent implements OnInit {
     this.remainingSafeSquares--;
     if (this.remainingSafeSquares === 0) {
       this.gameState = GameState.Victory;
-      window.alert("Congratulations! You won!");
+      this.flagMines();
     }
   }
 
   private revealMines(): void {
     this.mineSquares.forEach(s => s.reveal());
+  }
+
+  private flagMines(): void {
+    this.mineSquares.forEach(s => s.flagged = true);
   }
 
   private getRandomNumber(min: number, max: number): number {

@@ -35,7 +35,7 @@ export class MinefieldSquare {
     if (this.isMine) return '#000000';
     switch(this.neighboringMines) {
       case 1: return '#0000FF';
-      case 2: return '#00FF00';
+      case 2: return '#32CD32';
       case 3: return '#FF0000';
       case 4: return '#800080';
       case 5: return '#800000';
@@ -46,6 +46,7 @@ export class MinefieldSquare {
 }
 
 export enum GameState {
+  Ready,
   InProgress,
   Victory,
   Defeat

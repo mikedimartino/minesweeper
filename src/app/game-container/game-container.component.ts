@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { MinefieldComponent } from "../minefield/minefield.component";
 import { GameDifficulty, GameSettings } from "../custom-types";
+import { FormGroup, FormControl } from "@angular/forms";
 
 @Component({
   selector: 'game-container',
@@ -19,6 +20,7 @@ export class GameContainerComponent implements OnInit {
   customHeight = 0;
   customWidth = 0;
   customMines = 0;
+  settingsForm: FormGroup;
 
   beginnerHeight = 9;
   beginnerWidth = 9;
@@ -33,16 +35,28 @@ export class GameContainerComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.settingsForm = new FormGroup({
+      difficulty: new FormControl('difficulty'),
+      customHeight: new FormControl('customHeight'),
+      customWidth: new FormControl('customWidth'),
+      customMines: new FormControl('customMines'),
+    });
     this.difficulty = GameDifficulty.Beginner;
     this.newGame();
   }
 
-  newGame() {
-    this.minefield.buildMinefield(this.getSettings(this.difficulty));
+  newGame(settings?) {
+    if (settings) {
+      this.difficulty = settings.difficulty;
+      this.customHeight = settings.customHeight;
+      this.customWidth = settings.customWidth;
+      this.customMines = settings.customMines;
+    }
+    this.minefield.buildMinefield(this.getSettings());
   }
 
-  getSettings(difficulty: GameDifficulty): GameSettings {
-    switch(difficulty) {
+  getSettings(): GameSettings {
+    switch(this.difficulty) {
       case GameDifficulty.Beginner:
         return new GameSettings(this.beginnerHeight, this.beginnerWidth, this.beginnerMines);
       case GameDifficulty.Intermediate:
