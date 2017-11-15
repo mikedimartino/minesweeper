@@ -74,12 +74,13 @@ export class MinefieldComponent implements OnInit {
 
   private revealSafeNeighbors(r: number, c: number) {
     const _this = this;
-    this.getNeighbors(r, c)
-      .filter(n => !n.revealed && n.neighboringMines === 0)
-      .forEach(function(s) {
-        _this.revealSquare(s);
+    this.getNeighbors(r, c).forEach(function(s) {
+      if (s.revealed) return;
+      _this.revealSquare(s);
+      if (s.neighboringMines === 0) {
         _this.revealSafeNeighbors(s.row, s.column);
-      });
+      }
+    });
   }
 
   // Reveal square and check for victory

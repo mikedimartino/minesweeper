@@ -1,4 +1,61 @@
 <div class="game-container-wrapper">
-  <button (click)="newGame()">New Game</button>
+  
+  <button (click)="op.toggle($event)">Game</button>
+  <p-overlayPanel #op [dismissable]="false" [showCloseIcon]="true">
+    <table>
+      <tr>
+        <td></td>
+        <td>Height</td>
+        <td>Width</td>
+        <td>Mines</td>
+      </tr>
+      <tr>
+        <td>
+          <label>
+            <input type="radio" name="difficulty" [value]="difficultyEnum.Beginner" [(ngModel)]="difficulty">
+            Beginner
+          </label>
+        </td>
+        <td>{{ beginnerHeight }}</td>
+        <td>{{ beginnerWidth }}</td>
+        <td>{{ beginnerMines }}</td>
+      </tr>
+      <tr>
+        <td>
+          <label>
+            <input type="radio" name="difficulty" [value]="difficultyEnum.Intermediate" [(ngModel)]="difficulty">
+            Intermediate
+          </label>
+        </td>
+        <td>{{ intermediateHeight }}</td>
+        <td>{{ intermediateWidth }}</td>
+        <td>{{ intermediateMines }}</td>
+      </tr>
+      <tr>
+        <td>
+          <label>
+            <input type="radio" name="difficulty" [value]="difficultyEnum.Expert" [(ngModel)]="difficulty">
+            Expert
+          </label>
+        </td>
+        <td>{{ expertHeight }}</td>
+        <td>{{ expertWidth }}</td>
+        <td>{{ expertMines }}</td>
+      </tr>
+      <tr>
+        <td>
+          <label>
+            <input type="radio" name="difficulty" [value]="difficultyEnum.Custom" [(ngModel)]="difficulty">
+            Custom
+          </label>
+        </td>
+        <td><input type="text" [(ngModel)]="customHeight"></td>
+        <td><input type="text" [(ngModel)]="customWidth"></td>
+        <td><input type="text" [(ngModel)]="customMines"></td>
+      </tr>
+    </table>
+    <button (click)="newGame(); op.hide();">New Game</button>
+  </p-overlayPanel>
+
   <minefield></minefield>
 </div>

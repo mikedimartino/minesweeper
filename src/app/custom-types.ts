@@ -19,3 +19,22 @@ export enum GameState {
   Victory,
   Defeat
 }
+
+export enum GameDifficulty {
+  Beginner,
+  Intermediate,
+  Expert,
+  Custom
+}
+
+export class GameSettings {
+  height: number;
+  width: number;
+  mines: number;
+
+  constructor(height, width, mines) {
+    this.height = height;
+    this.width = width;
+    this.mines = mines;
+  }
+}
