@@ -93,7 +93,7 @@ export class MinefieldComponent implements OnInit {
         this.revealSafeNeighbors(r, c);
       }
     } else if (event.which === 3) { // Right click
-      square.flagged = true;
+      square.flagged = !square.flagged;
     }
   }
 
