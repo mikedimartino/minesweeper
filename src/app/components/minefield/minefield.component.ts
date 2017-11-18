@@ -1,5 +1,14 @@
 import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
-import { MinefieldSquare, GameState, GameSettings } from "../custom-types";
+import { MinefieldSquare } from "../../classes/minefield-square";
+import { GameSettings } from "../../classes/game-settings";
+
+
+enum GameState {
+  Ready,
+  InProgress,
+  Victory,
+  Defeat
+}
 
 @Component({
   selector: 'minefield',
@@ -8,8 +17,8 @@ import { MinefieldSquare, GameState, GameSettings } from "../custom-types";
   encapsulation: ViewEncapsulation.None
 })
 export class MinefieldComponent implements OnInit {
-  @Input() rows: number;// = 20;
-  @Input() columns: number;// = 10;
+  @Input() rows: number;
+  @Input() columns: number;
 
   totalSquares: number;
   mineCount: number = 10;
@@ -67,7 +76,7 @@ export class MinefieldComponent implements OnInit {
 
     if (event.which === 1) { // Left click
       if (this.gameState === GameState.Ready) {
-        // Don't allow first click to be on a mine
+        // Prevent first click from being a mine
         while (square.isMine) {
           this.buildMinefield(this.settings);
           square = this.minefield[r][c];
@@ -101,7 +110,7 @@ export class MinefieldComponent implements OnInit {
 
   // Reveal square and check for victory
   private revealSquare(square: MinefieldSquare): void {
-    if (square.revealed) return; // Why is this needed?
+    if (square.revealed) return;
 
     square.reveal();
     this.remainingSafeSquares--;

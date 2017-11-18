@@ -1,7 +1,14 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { MinefieldComponent } from "../minefield/minefield.component";
-import { GameDifficulty, GameSettings } from "../custom-types";
+import { GameSettings } from "../../classes/game-settings";
 import { FormGroup, FormControl } from "@angular/forms";
+
+enum GameDifficulty {
+  Beginner,
+  Intermediate,
+  Expert,
+  Custom
+}
 
 @Component({
   selector: 'game-container',
@@ -53,10 +60,6 @@ export class GameContainerComponent implements OnInit {
       this.customMines = settings.customMines;
     }
     this.minefield.buildMinefield(this.getSettings());
-  }
-
-  hideOverlay() {
-    console.log("HIDE");
   }
 
   private getSettings(): GameSettings {
