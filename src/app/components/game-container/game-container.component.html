@@ -1,9 +1,9 @@
 <div class="game-container-wrapper">
   
   <button (click)="op.toggle($event)">Settings</button>
-  <button (click)="newGame()">New Game</button>
+  <button (click)="game.newGame()">New Game</button>
   <p-overlayPanel #op [dismissable]="true" [showCloseIcon]="true">
-    <form [formGroup]="settingsForm" (ngSubmit)="newGame(settingsForm.value); op.hide();">
+    <form [formGroup]="settingsForm" (ngSubmit)="settingsChangeConfirmed(); op.hide();">
       <table>
         <tr>
           <td></td>
@@ -12,28 +12,28 @@
           <td>Mines</td>
         </tr>
         <tr>
-          <td><label><input type="radio" name="difficulty" [value]="difficultyEnum.Beginner" formControlName="difficulty">Beginner</label></td>
-          <td>{{ beginnerHeight }}</td>
-          <td>{{ beginnerWidth }}</td>
-          <td>{{ beginnerMines }}</td>
+          <td><label><input type="radio" name="difficulty" [value]="game.difficultyEnum.Beginner" formControlName="difficulty">Beginner</label></td>
+          <td>{{ game.beginnerHeight }}</td>
+          <td>{{ game.beginnerWidth }}</td>
+          <td>{{ game.beginnerMines }}</td>
         </tr>
         <tr>
-          <td><label><input type="radio" name="difficulty" [value]="difficultyEnum.Intermediate" formControlName="difficulty">Intermediate</label> </td>
-          <td>{{ intermediateHeight }}</td>
-          <td>{{ intermediateWidth }}</td>
-          <td>{{ intermediateMines }}</td>
+          <td><label><input type="radio" name="difficulty" [value]="game.difficultyEnum.Intermediate" formControlName="difficulty">Intermediate</label> </td>
+          <td>{{ game.intermediateHeight }}</td>
+          <td>{{ game.intermediateWidth }}</td>
+          <td>{{ game.intermediateMines }}</td>
         </tr>
         <tr>
-          <td><label><input type="radio" name="difficulty" [value]="difficultyEnum.Expert" formControlName="difficulty">Expert</label></td>
-          <td>{{ expertHeight }}</td>
-          <td>{{ expertWidth }}</td>
-          <td>{{ expertMines }}</td>
+          <td><label><input type="radio" name="difficulty" [value]="game.difficultyEnum.Expert" formControlName="difficulty">Expert</label></td>
+          <td>{{ game.expertHeight }}</td>
+          <td>{{ game.expertWidth }}</td>
+          <td>{{ game.expertMines }}</td>
         </tr>
         <tr>
-          <td><label><input type="radio" name="difficulty" [value]="difficultyEnum.Custom" formControlName="difficulty">Custom</label></td>
-          <td><input type="text" (click)="$event.target.select()" formControlName="customHeight"></td>
-          <td><input type="text" (click)="$event.target.select()" formControlName="customWidth"></td>
-          <td><input type="text" (click)="$event.target.select()" formControlName="customMines"></td>
+          <td><label><input type="radio" name="difficulty" [value]="game.difficultyEnum.Custom" formControlName="difficulty">Custom</label></td>
+          <td><input type="text" (click)="$event.target.select()" formControlName="customHeight" [value]="game.customHeight"></td>
+          <td><input type="text" (click)="$event.target.select()" formControlName="customWidth" [value]="game.customWidth"></td>
+          <td><input type="text" (click)="$event.target.select()" formControlName="customMines" [value]="game.customMines"></td>
         </tr>
       </table>
       <input type="submit" value="New Game">
@@ -43,7 +43,7 @@
   <minefield></minefield>
 
   <div class="game-info">
-    <div>Remaining safe squares: {{ minefield.remainingSafeSquares }}</div>
+    <div>Remaining safe squares: {{ game.remainingSafeSquares }}</div>
   </div>
 
 </div>

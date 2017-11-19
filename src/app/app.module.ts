@@ -8,6 +8,7 @@ import { GameContainerComponent } from './components/game-container/game-contain
 import { MinefieldComponent } from './components/minefield/minefield.component';
 
 import { OverlayPanelModule } from 'primeng/primeng';
+import { GameService } from "./services/game.service";
 
 
 @NgModule({
@@ -23,7 +24,7 @@ import { OverlayPanelModule } from 'primeng/primeng';
     OverlayPanelModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [GameService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

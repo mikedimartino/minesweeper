@@ -1,15 +1,15 @@
 <table>
-  <tr *ngFor="let mRow of minefield; let r = index">
+  <tr *ngFor="let mRow of game.minefield; let r = index">
     <td style="border: 1px solid black;" *ngFor="let square of mRow; let c = index">
-      <div (mousedown)="squareClicked($event, r, c)" (contextmenu)="false"
-          [ngClass]="minefield[r][c].cssClasses" [style.color]="minefield[r][c].getColor()">
-        <span *ngIf="minefield[r][c].revealed && !minefield[r][c].isMine">
-          {{ minefield[r][c].neighboringMines }}
+      <div (mousedown)="game.squareClicked($event, r, c)" (contextmenu)="false"
+          [ngClass]="game.minefield[r][c].cssClasses" [style.color]="game.minefield[r][c].getColor()">
+        <span *ngIf="game.minefield[r][c].revealed && !game.minefield[r][c].isMine">
+          {{ game.minefield[r][c].neighboringMines }}
         </span>
-        <span *ngIf="minefield[r][c].revealed && minefield[r][c].isMine">
+        <span *ngIf="game.minefield[r][c].revealed && game.minefield[r][c].isMine">
           <i class="fa fa-bomb"></i>
         </span>
-        <span *ngIf="!minefield[r][c].revealed && minefield[r][c].flagged">
+        <span *ngIf="!game.minefield[r][c].revealed && game.minefield[r][c].flagged">
           <i class="fa fa-flag"></i>
         </span>
       </div>
