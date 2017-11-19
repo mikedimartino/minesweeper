@@ -115,6 +115,7 @@ export class GameService {
       if (square.isMine) {
         this.gameState = GameState.Defeat;
         this.revealMines();
+        this.showAlert("Boom! You lost.");
       } else if (square.neighboringMines === 0) {
         this.revealSafeNeighbors(r, c);
       }
@@ -139,10 +140,10 @@ export class GameService {
     if (square.revealed) return;
 
     square.reveal();
-    this.remainingSafeSquares--;
-    if (this.remainingSafeSquares === 0) {
+    if (--this.remainingSafeSquares === 0) {
       this.gameState = GameState.Victory;
       this.flagMines();
+      this.showAlert("Congratulations! You won!");
     }
   }
 
@@ -203,5 +204,10 @@ export class GameService {
       case GameDifficulty.Custom:
         return  new GameSettings(this.customHeight, this.customWidth, this.customMines);
     }
+  }
+
+  private showAlert(message: string) {
+    // Use timeout to make sure page renders before alert
+    setTimeout(function(){ alert(message); }, 100);
   }
 }
